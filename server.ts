@@ -6,6 +6,7 @@ import * as QRCodeNamespace from "qrcode";
 const QRCode: any = (QRCodeNamespace as any).default || QRCodeNamespace;
 import { connect } from "./takeshi-bot-main/src/connection.js";
 import { load } from "./takeshi-bot-main/src/loader.js";
+import { initDbSync } from "./takeshi-bot-main/src/utils/dbSync.js";
 import {
   addAutoResponderItem,
   listAutoResponderItems,
@@ -1275,15 +1276,6 @@ app.post("/api/commands/content", (req, res) => {
   }
 });
 
-// Auto-boot Coruja Store Bot on server startup!
-console.log("[Coruja Store Bot] Inicializando auto-boot da conexão WhatsApp...");
-startKazuyaBot().catch((err) => {
-  console.error("[Coruja Store Bot] Falha no auto-boot inicial:", err.message);
-});
-
-// Initialise the non-repeating recurrent product ad campaigns
-startRecursiveAdsLoop();
-
 // Integrate Vite Middleware
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
@@ -1308,4 +1300,25 @@ async function startServer() {
   });
 }
 
-startServer();
+// Unified async bootstrap sequence to ensure DB sync completes before connection
+async function bootstrap() {
+  // 1. Initialize PostgreSQL dynamic file synchronization (Restore step)
+  await initDbSync();
+
+  // 2. Auto-boot Coruja Store Bot WhatsApp connection
+  console.log("[Coruja Store Bot] Inicializando auto-boot da conexão WhatsApp...");
+  await startKazuyaBot().catch((err) => {
+    console.error("[Coruja Store Bot] Falha no auto-boot inicial:", err.message);
+  });
+
+  // 3. Initialise the non-repeating recurrent product ad campaigns
+  startRecursiveAdsLoop();
+
+  // 4. Start HTTP Server
+  await startServer();
+}
+
+bootstrap().catch((err) => {
+  console.error("[Bootstrap] Erro crítico na inicialização geral:", err);
+});
+
