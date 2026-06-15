@@ -14,7 +14,9 @@
  *
  * @author Dev Gui
  */
-import makeWASocket, {
+import {
+  default as makeWASocketTemp,
+  makeWASocket as makeWASocketNamed,
   DisconnectReason,
   fetchLatestBaileysVersion,
   isJidBroadcast,
@@ -22,6 +24,7 @@ import makeWASocket, {
   isJidStatusBroadcast,
   useMultiFileAuthState,
 } from "baileys";
+const makeWASocket = makeWASocketNamed || makeWASocketTemp;
 import NodeCache from "node-cache";
 import fs from "node:fs";
 import path from "node:path";
