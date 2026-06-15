@@ -1,0 +1,6 @@
+{
+  "name": "Coruja Store Bot",
+  "description": "Painel de controle elegante para o bot de WhatsApp Coruja Store Bot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

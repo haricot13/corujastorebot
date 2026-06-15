@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+takeshi-bot-main/assets/auth/baileys/
+takeshi-bot-main/database/notified_sales_ids.json
+takeshi-bot-main/database/store_mock_db.json
+takeshi-bot-main/database/config.json
